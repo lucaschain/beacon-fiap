@@ -1,7 +1,6 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import * as Types from "./api.types"
 
 /**
  * Manages all requests to the API.
@@ -26,13 +25,6 @@ export class Api {
     this.config = config
   }
 
-  /**
-   * Sets up the API.  This will be called during the bootup
-   * sequence and will happen before the first React component
-   * is mounted.
-   *
-   * Be as quick as possible in here.
-   */
   setup() {
     // construct the apisauce instance
     this.apisauce = create({
@@ -44,12 +36,11 @@ export class Api {
     })
   }
 
-  /**
-   * Gets a list of users.
-   */
-  async getUsers(): Promise<Types.GetUsersResult> {
+  async getPlaces(lat, long, kind): Promise {
     // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users`)
+    const response: ApiResponse<any> = await this.apisauce.get(
+      "https://lineless-api.herokuapp.com/api/v1/places?kind=bar&long=-23.556392&lat=-46.652225",
+    )
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -57,21 +48,7 @@ export class Api {
       if (problem) return problem
     }
 
-    const convertUser = raw => {
-      return {
-        id: raw.id,
-        name: raw.name,
-      }
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
-      return { kind: "ok", users: resultUsers }
-    } catch {
-      return { kind: "bad-data" }
-    }
+    return response.data
   }
 
   /**

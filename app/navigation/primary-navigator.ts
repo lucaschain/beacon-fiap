@@ -1,11 +1,13 @@
 import { createStackNavigator } from "react-navigation"
 import { WelcomeScreen } from "../screens/welcome-screen"
 import { DemoScreen } from "../screens/demo-screen"
+import { MapScreen } from "../screens/map-screen"
 
 export const PrimaryNavigator = createStackNavigator(
   {
     welcome: { screen: WelcomeScreen },
     demo: { screen: DemoScreen },
+    map: { screen: MapScreen },
   },
   {
     headerMode: "none",

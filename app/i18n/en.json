@@ -1,16 +1,15 @@
 {
   "common": {
     "ok": "OK!",
-    "cancel": "Cancel",
+    "cancel": "Cancelar",
     "back": "Back"
   },
   "errors": {
-    "invalidEmail": "Invalid email address."
+    "invalidEmail": "Email invalido."
   },
   "welcomeScreen": {
-    "poweredBy": "POWERED BY BOWSER",
-    "readyForLaunch": "Ready for launch.",
-    "continue": "CONTINUE"
+    "readyForLaunch": "estamos quase la",
+    "continue": "continuar"
   },
   "demoScreen": {
     "howTo": "HOW TO",
@@ -19,6 +18,9 @@
     "reactotron": "Demo Reactotron",
     "androidReactotronHint": "If this doesn't work, ensure the Reactotron desktop app is running, run adb reverse tcp:9090 tcp:9090 from your terminal, and reload the app.",
     "iosReactotronHint": "If this doesn't work, ensure the Reactotron desktop app is running and reload app."
+  },
+  "mapScreen": {
+    "header": "teste"
   },
   "storybook": {
     "placeholder": "Placeholder",

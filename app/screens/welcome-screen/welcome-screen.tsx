@@ -1,5 +1,8 @@
 import * as React from "react"
-import { View, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
+import Geolocation from "@react-native-community/geolocation"
+import { save } from "../../utils/storage"
+import { View, Alert, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
+import { request, PERMISSIONS, requestNotifications } from "react-native-permissions"
 import { NavigationScreenProps } from "react-navigation"
 import { Text } from "../../components/text"
 import { Button } from "../../components/button"
@@ -81,29 +84,57 @@ const FOOTER_CONTENT: ViewStyle = {
 export interface WelcomeScreenProps extends NavigationScreenProps<{}> {}
 
 export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props => {
-  const nextScreen = React.useMemo(() => () => props.navigation.navigate("demo"), [
-    props.navigation,
-  ])
+  const nextScreen = React.useMemo(() => () => props.navigation.navigate("map"), [props.navigation])
+
+  const askPermission = async () => {
+    const locationStatus = await request(PERMISSIONS.IOS.LOCATION_ALWAYS)
+    const notificationStatus = await requestNotifications([
+      "alert",
+      "sound",
+      "badge",
+      "lockScreen",
+      "carPlay",
+      "notificationCenter",
+      "criticalAlert",
+    ])
+
+    if (locationStatus != "granted" || notificationStatus.status != "granted") {
+      Alert.alert(
+        "falha nas permissoes",
+        "as permissoes sao obrigatorias para funcionamento do app, por favor verifique as permissoes de localizacao e notificao nas configuracoes do sistema",
+      )
+    } else {
+      Geolocation.getCurrentPosition(
+        position => {
+          const location = JSON.stringify(position)
+          saveLocation(location)
+        },
+        error => Alert.alert(error.message),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+      )
+    }
+  }
+
+  const saveLocation = async location => {
+    await save("LOCATION", location)
+    nextScreen()
+  }
 
   return (
     <View style={FULL}>
       <Wallpaper />
       <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-        <Header headerTx="welcomeScreen.poweredBy" style={HEADER} titleStyle={HEADER_TITLE} />
         <Text style={TITLE_WRAPPER}>
-          <Text style={TITLE} text="Your new app, " />
-          <Text style={ALMOST} text="almost" />
-          <Text style={TITLE} text="!" />
+          <Text style={TITLE} text="bem vindo, " />
         </Text>
         <Text style={TITLE} preset="header" tx="welcomeScreen.readyForLaunch" />
         <Image source={bowserLogo} style={BOWSER} />
         <Text style={CONTENT}>
-          This probably isn't what your app is going to look like. Unless your designer handed you
-          this screen and, in that case, congrats! You're ready to ship.
+          antes de comecarmos vamos precisar que voce de permissao de localizacao e notificacao para
+          o nosso app.
         </Text>
         <Text style={CONTENT}>
-          For everyone else, this is where you'll see a live preview of your fully functioning app
-          using Ignite.
+          nao se preocupe, nao compartilhamos suas informacoes com ninguem.
         </Text>
       </Screen>
       <SafeAreaView style={FOOTER}>
@@ -112,7 +143,7 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
             style={CONTINUE}
             textStyle={CONTINUE_TEXT}
             tx="welcomeScreen.continue"
-            onPress={nextScreen}
+            onPress={askPermission}
           />
         </View>
       </SafeAreaView>

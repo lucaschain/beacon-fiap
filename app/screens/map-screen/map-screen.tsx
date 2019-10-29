@@ -5,6 +5,7 @@ import MapView from "react-native-maps"
 import { Marker } from "react-native-maps"
 import { View, ViewStyle } from "react-native"
 import { Screen } from "../../components/screen"
+import { Beacon } from "../../components/beacon"
 import { color, spacing } from "../../theme"
 
 const FULL: ViewStyle = { flex: 1, backgroundColor: "#20162D" }
@@ -69,9 +70,15 @@ export const MapScreen = () => {
   return (
     <View style={FULL}>
       <Screen style={CONTAINER} backgroundColor={color.transparent}>
-        <MapView style={{ flex: 1 }} showsUserLocation initialRegion={userLocation}>
-          {renderMarkers()}
-        </MapView>
+        <Beacon
+          identifier="loja"
+          uuid="123e4567-e89b-12d3-a456-426655440000"
+          noBeaconMessage="Você precisa estar no restaurante pra pagar"
+        >
+          <MapView style={{ flex: 1 }} showsUserLocation initialRegion={userLocation}>
+            {renderMarkers()}
+          </MapView>
+        </Beacon>
       </Screen>
     </View>
   )

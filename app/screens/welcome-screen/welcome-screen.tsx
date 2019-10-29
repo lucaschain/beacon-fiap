@@ -1,14 +1,13 @@
 import * as React from "react"
 import Geolocation from "@react-native-community/geolocation"
 import { save } from "../../utils/storage"
-import { View, Alert, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
-import { request, PERMISSIONS, requestNotifications } from "react-native-permissions"
+import { Platform, View, Alert, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
+import { request, RESULTS, PERMISSIONS, requestNotifications } from "react-native-permissions"
 import { NavigationScreenProps } from "react-navigation"
 import { Text } from "../../components/text"
 import { Button } from "../../components/button"
 import { Screen } from "../../components/screen"
 import { Wallpaper } from "../../components/wallpaper"
-import { Header } from "../../components/header"
 import { color, spacing } from "../../theme"
 import { bowserLogo } from "./"
 
@@ -22,19 +21,6 @@ const TEXT: TextStyle = {
   fontFamily: "Montserrat",
 }
 const BOLD: TextStyle = { fontWeight: "bold" }
-const HEADER: TextStyle = {
-  paddingTop: spacing[3],
-  paddingBottom: spacing[4] + spacing[1],
-  paddingHorizontal: 0,
-}
-const HEADER_TITLE: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 12,
-  lineHeight: 15,
-  textAlign: "center",
-  letterSpacing: 1.5,
-}
 const TITLE_WRAPPER: TextStyle = {
   ...TEXT,
   textAlign: "center",
@@ -45,12 +31,6 @@ const TITLE: TextStyle = {
   fontSize: 28,
   lineHeight: 38,
   textAlign: "center",
-}
-const ALMOST: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 26,
-  fontStyle: "italic",
 }
 const BOWSER: ImageStyle = {
   alignSelf: "center",
@@ -86,8 +66,16 @@ export interface WelcomeScreenProps extends NavigationScreenProps<{}> {}
 export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props => {
   const nextScreen = React.useMemo(() => () => props.navigation.navigate("map"), [props.navigation])
 
+  const saveLocation = async location => {
+    await save("LOCATION", location)
+    nextScreen()
+  }
+
   const askPermission = async () => {
-    const locationStatus = await request(PERMISSIONS.IOS.LOCATION_ALWAYS)
+    const locationStatus = await request(Platform.OS === 'ios' ?
+      PERMISSIONS.IOS.LOCATION_ALWAYS :
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+    )
     const notificationStatus = await requestNotifications([
       "alert",
       "sound",
@@ -98,10 +86,10 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
       "criticalAlert",
     ])
 
-    if (locationStatus != "granted" || notificationStatus.status != "granted") {
+    if (locationStatus !== RESULTS.GRANTED || notificationStatus.status !== RESULTS.GRANTED) {
       Alert.alert(
-        "falha nas permissoes",
-        "as permissoes sao obrigatorias para funcionamento do app, por favor verifique as permissoes de localizacao e notificao nas configuracoes do sistema",
+        "Oops!",
+        "As permissões de localização e notificação são obrigatórias pro funcionamento do APP",
       )
     } else {
       Geolocation.getCurrentPosition(
@@ -110,14 +98,9 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
           saveLocation(location)
         },
         error => Alert.alert(error.message),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+        { enableHighAccuracy: true, timeout: 1000 },
       )
     }
-  }
-
-  const saveLocation = async location => {
-    await save("LOCATION", location)
-    nextScreen()
   }
 
   return (
@@ -125,16 +108,15 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
       <Wallpaper />
       <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
         <Text style={TITLE_WRAPPER}>
-          <Text style={TITLE} text="bem vindo, " />
+          <Text style={TITLE} text="Bem vindo!" />
         </Text>
         <Text style={TITLE} preset="header" tx="welcomeScreen.readyForLaunch" />
         <Image source={bowserLogo} style={BOWSER} />
         <Text style={CONTENT}>
-          antes de comecarmos vamos precisar que voce de permissao de localizacao e notificacao para
-          o nosso app.
+          antes de começarmos, vamos precisar que você dê permissão de localização e notificação para o app
         </Text>
         <Text style={CONTENT}>
-          nao se preocupe, nao compartilhamos suas informacoes com ninguem.
+          não se preocupe, não compartilhamos suas informações com ninguém.
         </Text>
       </Screen>
       <SafeAreaView style={FOOTER}>

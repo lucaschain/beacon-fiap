@@ -72,15 +72,18 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
   }
 
   const askPermission = async () => {
-    const locationStatus = await request(Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_ALWAYS : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+    const locationStatus = await request(Platform.OS === 'ios' ?
+      PERMISSIONS.IOS.LOCATION_ALWAYS :
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+    )
     const notificationStatus = await requestNotifications([
-      'alert',
-      'sound',
-      'badge',
-      'lockScreen',
-      'carPlay',
-      'notificationCenter',
-      'criticalAlert',
+      "alert",
+      "sound",
+      "badge",
+      "lockScreen",
+      "carPlay",
+      "notificationCenter",
+      "criticalAlert",
     ])
 
     if (locationStatus !== RESULTS.GRANTED || notificationStatus.status !== RESULTS.GRANTED) {

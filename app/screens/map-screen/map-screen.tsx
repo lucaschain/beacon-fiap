@@ -1,11 +1,13 @@
 import * as React from "react"
 import Geolocation from "@react-native-community/geolocation"
+import { NavigationScreenProps } from "react-navigation"
 import { Api } from "../../services/api"
 import MapView from "react-native-maps"
 import { Marker } from "react-native-maps"
 import { View, ViewStyle } from "react-native"
 import { Screen } from "../../components/screen"
 import { Beacon } from "../../components/beacon"
+import { Checkbox } from "../../components/Checkbox"
 import { color, spacing } from "../../theme"
 
 const FULL: ViewStyle = { flex: 1, backgroundColor: "#20162D" }
@@ -14,7 +16,11 @@ const CONTAINER: ViewStyle = {
   paddingTop: spacing[4],
 }
 
-export const MapScreen = () => {
+export interface MapScreen extends NavigationScreenProps<{}> {}
+export const MapScreen: React.FunctionComponent<MapScreen> = props => {
+  const nextScreen = React.useMemo(() => obj => props.navigation.navigate("menu", obj), [
+    props.navigation,
+  ])
   const [userLocation, setUserLocation] = React.useState(false)
   const [markers, setMarkers] = React.useState(false)
   console.disableYellowBox = true
@@ -25,8 +31,8 @@ export const MapScreen = () => {
         setUserLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         })
       },
       error => console.log(error.message),
@@ -41,8 +47,8 @@ export const MapScreen = () => {
   const getPlacesNearBy = async () => {
     const API = new Api()
     API.setup()
-    const markers = await API.getPlaces(userLocation.latitude, userLocation.longitude, "bar")
-    setMarkers(markers)
+    const apiResponse = await API.getPlaces(userLocation.latitude, userLocation.longitude, "bar")
+    setMarkers(apiResponse.results)
   }
 
   React.useEffect(() => {
@@ -53,6 +59,7 @@ export const MapScreen = () => {
     if (markers) {
       return markers.map(marker => (
         <Marker
+          onCalloutPress={() => nextScreen({ name: marker.name, description: marker.vicinity })}
           id={marker.id}
           coordinate={{
             latitude: marker.geometry.location.lat,
@@ -62,8 +69,6 @@ export const MapScreen = () => {
           description={marker.vicinity}
         />
       ))
-    } else {
-      console.log("no markers")
     }
   }
 

@@ -1,11 +1,15 @@
 import { createStackNavigator } from "react-navigation"
 import { WelcomeScreen } from "../screens/welcome-screen"
 import { MapScreen } from "../screens/map-screen"
+import { MenuScreen } from "../screens/menus-screen"
+import { CheckoutScreen } from "../screens/checkout-screen"
 
 export const PrimaryNavigator = createStackNavigator(
   {
     welcome: { screen: WelcomeScreen },
     map: { screen: MapScreen },
+    menu: { screen: MenuScreen },
+    checkout: { screen: CheckoutScreen },
   },
   {
     headerMode: "none",

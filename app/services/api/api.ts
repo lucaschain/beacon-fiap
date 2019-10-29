@@ -39,7 +39,7 @@ export class Api {
   async getPlaces(lat, long, kind): Promise {
     // make the api call
     const response: ApiResponse<any> = await this.apisauce.get(
-      "https://lineless-api.herokuapp.com/api/v1/places?kind=bar&long=-23.556392&lat=-46.652225",
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyCc3sAiABTDiU9CX3DWOeYGexsSq9ltHyY&location=${lat},${long}&radius=700&opennow=true&type=restaurant`,
     )
 
     // the typical ways to die when calling an api

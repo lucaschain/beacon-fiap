@@ -7160,6 +7160,13 @@ react-native-maps@0.16.4:
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.16.4.tgz#c18c3cab8cd0ce05431cd74dac11a39afaa579e4"
   integrity sha512-dG7ISqQoy8RyshrFkHiAnmhf5CcoaenPLLB4s+GJgabcS3FTD72EWFhmIHewd+ItSFLzXQXbhW40aUpAMCFhfg==
 
+react-native-modest-checkbox@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-modest-checkbox/-/react-native-modest-checkbox-3.3.0.tgz#b83d05258c0f2e08f5be85a8f804432910d953d5"
+  integrity sha512-bTf6N76LYEgvOl1erKxVbbfHVqaSfyY9/JXwnokKUSGiTw+37yiPWwMK5+qM7J3YX+N1rrWrC5UZUVEJzTR8Qg==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-permissions@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.0.3.tgz#b6da83e5e313e41ba5f70ff2c4567291766b0140"

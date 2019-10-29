@@ -128,7 +128,7 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
           <Text style={TITLE} text="bem vindo, " />
         </Text>
         <Text style={TITLE} preset="header" tx="welcomeScreen.readyForLaunch" />
-        <Image source={bowserLogo} style={BOWSER} />
+        {/* <Image source={bowserLogo} style={BOWSER} /> */}
         <Text style={CONTENT}>
           antes de comecarmos vamos precisar que voce de permissao de localizacao e notificacao para
           o nosso app.

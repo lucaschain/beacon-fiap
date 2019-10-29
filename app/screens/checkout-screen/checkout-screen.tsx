@@ -2,6 +2,7 @@ import * as React from "react"
 import { Image, ImageStyle, Platform, TextStyle, View, ViewStyle, FlatList } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { Screen } from "../../components/screen"
+import { Beacon } from "../../components/beacon"
 import { Text } from "../../components/text"
 import { Button } from "../../components/button"
 import { Wallpaper } from "../../components/wallpaper"
@@ -159,12 +160,18 @@ export const CheckoutScreen: React.FunctionComponent<CheckoutScreen> = props => 
             label="numero do cartao"
           />
           <View>
-            <Button
-              style={DEMO}
-              textStyle={DEMO_TEXT}
-              text="finalizar"
-              onPress={() => setSuccess(true)}
-            />
+            <Beacon
+              identifier="loja"
+              uuid="123e4567-e89b-12d3-a456-426655440000"
+              noBeaconMessage="Você precisa estar no restaurante pra pagar"
+            >
+              <Button
+                style={DEMO}
+                textStyle={DEMO_TEXT}
+                text="finalizar"
+                onPress={() => setSuccess(true)}
+              />
+            </Beacon>
           </View>
         </>
       )

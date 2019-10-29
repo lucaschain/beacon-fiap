@@ -3,7 +3,7 @@ import Geolocation from "@react-native-community/geolocation"
 import { Api } from "../../services/api"
 import MapView from "react-native-maps"
 import { Marker } from "react-native-maps"
-import { View } from "react-native"
+import { View, ViewStyle } from "react-native"
 import { Screen } from "../../components/screen"
 import { color, spacing } from "../../theme"
 
@@ -13,7 +13,7 @@ const CONTAINER: ViewStyle = {
   paddingTop: spacing[4],
 }
 
-export const MapScreen = props => {
+export const MapScreen = () => {
   const [userLocation, setUserLocation] = React.useState(false)
   const [markers, setMarkers] = React.useState(false)
   console.disableYellowBox = true
